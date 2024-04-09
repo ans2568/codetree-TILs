@@ -42,10 +42,10 @@ void bfs() {
             int ny = y + dy[i];
             int nx = x + dx[i];
             if (nx < 0 || nx >= N || ny < 0 || ny >= N) continue;
-            if (map[ny][nx] == -1 || kill[ny][nx] > 0) continue;
+            if (map[ny][nx] == -1) continue;
             // 각 칸의 나무 그루 수에서 총 번식이 가능한 칸의 개수만큼 나누어 그루 수만큼 번식
             // 인접 칸이 빈 칸일 때
-            if (map[ny][nx] == 0) {
+            if (map[ny][nx] == 0 && kill[ny][nx] == 0) {
                 breed += 1;
             }
         }
@@ -66,7 +66,7 @@ void bfs() {
             int nx = x + dx[i];
             int ny = y + dy[i];
             if (nx < 0 || nx >= N || ny < 0 || ny >= N) continue;
-            if (!visited[ny][nx]) {
+            if (!visited[ny][nx] && kill[ny][nx] == 0) {
                 if (map[ny][nx] > 0)
                     map[ny][nx] += breeded_tree;
                 else if (map[ny][nx] == 0) {
@@ -76,12 +76,6 @@ void bfs() {
             }
         }
     }
-    // for (int i=0; i<N; i++) {
-    //     for (int j=0; j<N; j++) {
-    //         cout << map[i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
     // 제초제
     // 제초제 뿌릴 곳 찾기
     int max_kill_tree = 0;
@@ -96,7 +90,7 @@ void bfs() {
                 int ny = y + kill_dy[i]*j;
                 if (nx < 0 || ny < 0 || nx >=N || ny >= N) continue;
                 // 대각선으로 K만큼 전파될 때 나무인 칸
-                if (map[ny][nx] > 0) {
+                if (map[ny][nx] > 0 && kill[ny][nx] == 0) {
                     kill_val += map[ny][nx];
                 }
             }
@@ -125,7 +119,7 @@ void bfs() {
     // 제초제 뿌리기
     queue<pair<int, int>> kq;
     kq.push(make_pair(kx, ky));
-    kill[ky][kx] = C;
+    kill[ky][kx] = C+1;
     max_kill += map[ky][kx];
     map[ky][kx] = 0;
     while(!kq.empty()) {
@@ -138,7 +132,7 @@ void bfs() {
                 int ny = y + kill_dy[i]*j;
                 if (nx < 0 || ny < 0 || nx >=N || ny >= N) continue;
                 // 제초제 살포
-                kill[ny][nx] = C;
+                kill[ny][nx] = C+1;
                 // 벽 or 빈칸
                 if (map[ny][nx] == -1 || map[ny][nx] == 0)
                     break;
@@ -161,19 +155,21 @@ int main() {
     cin >> N >> M >> K >> C;
     for (int i=0; i<N; ++i) {
         for (int j=0; j<N; ++j) {
-            int tree;
-            cin >> tree;
-            map[i][j] = tree;
-            if (tree != 0 && tree != -1) {
-                // 나무일 때
-                trees.push(make_pair(i, j));
-                breeding.push(make_pair(i, j));
-                whole.push(make_pair(i, j));
-            }
+            cin >> map[i][j];
         }
     }
-    for (int i=0; i<M; ++i)
+    for (int i=0; i<M; ++i) {
+        for (int i=0; i<N; ++i) {
+            for (int j=0; j<N; ++j) {
+                if (map[i][j] != 0 && map[i][j] != -1) {
+                    trees.push(make_pair(i, j));
+                    breeding.push(make_pair(i, j));
+                    whole.push(make_pair(i, j));
+                }
+            }
+        }
         bfs();
+    }
     cout << max_kill << endl;
     return 0;
 }
