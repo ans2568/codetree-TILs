@@ -172,7 +172,7 @@ int main() {
             }
         }
     }
-    for (int i=0; i<C; ++i)
+    for (int i=0; i<M; ++i)
         bfs();
     cout << max_kill << endl;
     return 0;
