@@ -135,11 +135,11 @@ void bfs() {
                     kill[ny][nx] = C+1;
                     break;
                 }
+                if (map[ny][nx] == -1 || map[ny][nx] == 0)
+                    break;
                 // 제초제 살포
                 kill[ny][nx] = C+1;
                 // 벽 or 빈칸
-                if (map[ny][nx] == -1 || map[ny][nx] == 0)
-                    break;
                 max_kill += map[ny][nx];
                 map[ny][nx] = 0;
             }
