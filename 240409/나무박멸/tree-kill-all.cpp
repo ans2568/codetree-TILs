@@ -131,6 +131,10 @@ void bfs() {
                 int nx = x + kill_dx[i]*j;
                 int ny = y + kill_dy[i]*j;
                 if (nx < 0 || ny < 0 || nx >=N || ny >= N) continue;
+                if (kill[ny][nx] > 0) {
+                    kill[ny][nx] = C+1;
+                    break;
+                }
                 // 제초제 살포
                 kill[ny][nx] = C+1;
                 // 벽 or 빈칸
