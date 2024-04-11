@@ -22,7 +22,7 @@ bool result;
 void input();
 
 bool move(int idx, int direction, vector<pair<int, pair<int, int>>>& vec) {
-    cout << idx << "번째 기사 이동 시작" << endl;
+    // cout << idx << "번째 기사 이동 시작" << endl;
     int y = knights[idx].y;
     int x = knights[idx].x;
     int w = knights[idx].w;
