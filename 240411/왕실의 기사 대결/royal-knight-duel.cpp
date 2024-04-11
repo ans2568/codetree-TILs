@@ -12,11 +12,11 @@ struct Knight {
     int damaged; // 받은 데미지
 };
 int L, N, Q;
-int map[41][41];
+int map[50][50];
 int dy[4] = {-1, 0, 1, 0};
 int dx[4] = {0, 1, 0, -1};
-bool killed[31];
-bool pulled[31];
+bool killed[50];
+bool pulled[50];
 unordered_map<int, Knight> knights;
 
 void input();
@@ -35,14 +35,15 @@ bool move(int idx, int direction) {
             if (map[r][c] == 2 || r <= 0 || r > L || c <= 0 || c > L) {
                 return false;
             }
-            for (int i=1; i<=L; ++i) {
+            for (int i=1; i<=N; ++i) {
                 if (i == idx) continue;
-                if (killed[i]) continue;
                 // 이미 존재하는 기사 있다면
                 if ((r >= knights[i].y && r <= (knights[i].y + knights[i].h - 1)) && 
                     (c >= knights[i].x && c <= (knights[i].x + knights[i].w - 1))) {
                     // 밀쳤는데 이미 있던 기사가 움직이지 않았다면
-                    if (!move(i, direction)) return false;
+                    if (!move(i, direction)) {
+                        return false;
+                    }
                     pulled[i] = true;
                 }
             }
@@ -54,7 +55,6 @@ bool move(int idx, int direction) {
 }
 
 void damage(int idx) {
-    // 밀쳐짐 여부
     for (int i=1; i<=N; ++i) {
         if (i == idx) continue;
         if (killed[i]) continue;
@@ -65,11 +65,11 @@ void damage(int idx) {
                 if (killed[i]) continue;
                 if (map[y][x] == 1) {
                     knights[i].k -= 1;
-                    if (knights[i].k == 0) {
+                    knights[i].damaged += 1;
+                    if (knights[i].k <= 0) {
                         killed[i] = true;
                         continue;
                     } 
-                    knights[i].damaged += 1;
                 }
             }
         }
@@ -79,7 +79,7 @@ void damage(int idx) {
 int main() {
     input();
     int res = 0;
-    for (int i=1; i<=L; ++i) {
+    for (int i=1; i<=N; ++i) {
         if (!killed[i]) {
             res += knights[i].damaged;
         }
