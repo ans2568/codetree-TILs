@@ -71,6 +71,7 @@ void dolph_move() {
             direction = i;
         }
     }
+    if (direction == -1) cout << direction;
     // 루돌프 위치 업데이트
     ry += dolph_dy[direction];
     rx += dolph_dx[direction];
@@ -144,7 +145,7 @@ void santa_move() {
         // 기절 혹은 탈락한 산타 제거
         if (stun_santa[i] > 0 || fail_santa[i]) continue;
         // 기절하거나 탈락하지 않은 산타 중
-        int min_dist = dist(ry, rx, santa[i].first, santa[i].second);
+        int min_dist = dolph_dist[i];
         int direction = -1;
         for (int j=0; j<4; ++j) {
             int ny = santa[i].first + santa_dy[j];
@@ -186,7 +187,6 @@ void santa_move() {
 
             // 밀려난 곳에 다른 산타가 존재할 경우 상호작용
             interaction(i, santa[i].first, santa[i].second, direction, 's');
-
 
             // 기절
             stun_santa[i] = 2;
