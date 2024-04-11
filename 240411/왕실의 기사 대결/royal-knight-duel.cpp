@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include <cstring>
 using namespace std;
 struct Knight {
@@ -12,12 +12,12 @@ struct Knight {
     int damaged; // 받은 데미지
 };
 int L, N, Q;
-int map[50][50];
+int game[50][50];
 int dy[4] = {-1, 0, 1, 0};
 int dx[4] = {0, 1, 0, -1};
 bool killed[50];
 bool pulled[50];
-unordered_map<int, Knight> knights;
+map<int, Knight> knights;
 
 void input();
 
@@ -32,7 +32,7 @@ bool move(int idx, int direction) {
     for (int r=ny; r<=ny+h-1; ++r) {
         for (int c=nx; c<=nx+w-1; ++c) {
             //벽이거나 맵 밖이라면
-            if (map[r][c] == 2 || r <= 0 || r > L || c <= 0 || c > L) {
+            if (game[r][c] == 2 || r <= 0 || r > L || c <= 0 || c > L) {
                 return false;
             }
             for (int i=1; i<=N; ++i) {
@@ -63,7 +63,7 @@ void damage(int idx) {
         for (int y=k.y; y<=k.y+k.h-1; ++y) {
             for (int x=k.x; x<=k.x+k.w-1; ++x) {
                 if (killed[i]) continue;
-                if (map[y][x] == 1) {
+                if (game[y][x] == 1) {
                     knights[i].k -= 1;
                     knights[i].damaged += 1;
                     if (knights[i].k <= 0) {
@@ -93,7 +93,7 @@ void input() {
     cin >> L >> N >> Q;
     for (int i=1; i<=L; ++i) {
         for (int j=1; j<=L; ++j) {
-            cin >> map[i][j];
+            cin >> game[i][j];
         }
     }
     for (int i=1; i<=N; ++i) {
