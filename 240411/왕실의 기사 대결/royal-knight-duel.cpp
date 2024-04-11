@@ -37,6 +37,7 @@ bool move(int idx, int direction) {
             }
             for (int i=1; i<=L; ++i) {
                 if (i == idx) continue;
+                if (killed[i]) continue;
                 // 이미 존재하는 기사 있다면
                 if ((r >= knights[i].y && r <= (knights[i].y + knights[i].h - 1)) && 
                     (c >= knights[i].x && c <= (knights[i].x + knights[i].w - 1))) {
