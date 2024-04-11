@@ -18,10 +18,11 @@ int dx[4] = {0, 1, 0, -1};
 bool killed[50];
 bool pulled[50];
 map<int, Knight> knights;
-
+bool result;
 void input();
 
-bool move(int idx, int direction) {
+bool move(int idx, int direction, vector<pair<int, pair<int, int>>>& vec) {
+    // cout << idx << "번째 기사 이동 시작" << endl;
     int y = knights[idx].y;
     int x = knights[idx].x;
     int w = knights[idx].w;
@@ -31,6 +32,7 @@ bool move(int idx, int direction) {
     // 기사의 좌표를 포함한 모든 방패에서
     for (int r=ny; r<=ny+h-1; ++r) {
         for (int c=nx; c<=nx+w-1; ++c) {
+            // cout << idx << "번째 기사 " << r << ", " << c << " 좌표 확인" << endl;
             //벽이거나 맵 밖이라면
             if (game[r][c] == 2 || r <= 0 || r > L || c <= 0 || c > L) {
                 return false;
@@ -41,16 +43,20 @@ bool move(int idx, int direction) {
                 if ((r >= knights[i].y && r <= (knights[i].y + knights[i].h - 1)) && 
                     (c >= knights[i].x && c <= (knights[i].x + knights[i].w - 1))) {
                     // 밀쳤는데 이미 있던 기사가 움직이지 않았다면
-                    if (!move(i, direction)) {
+                    if (!move(i, direction, vec) || !result) {
+                        result = false;
                         return false;
                     }
+                    // cout << i << "번째 기사 밀쳐짐" << endl;
                     pulled[i] = true;
                 }
             }
         }
     }
-    knights[idx].y = ny;
-    knights[idx].x = nx;
+    vec.push_back(make_pair(idx, make_pair(ny, nx)));
+    // cout << idx << "번째 기사 좌표 변환" << endl;
+    // knights[idx].y = ny;
+    // knights[idx].x = nx;
     return true;
 }
 
@@ -110,12 +116,25 @@ void input() {
     }
     for (int i=0; i<Q; ++i) {
         memset(pulled, false, sizeof(pulled));
+        result = true;
         // 왕 명령
         int idx, d;
         cin >> idx >> d;
-        if (killed[idx]) continue;
+        if (killed[idx]) {
+            // cout << idx << "번째 기사 죽음" << endl;
+            continue;
+        } 
+            
         // 기사 이동
-        if (!move(idx, d)) continue;
+        vector<pair<int, pair<int, int>>> vec;
+        if (!move(idx, d, vec)) {
+            // cout << idx << "번째 기사가 밀쳤으나 벽이나 밖이라 움직이지 않음" << endl;
+            continue;
+        }
+        for (int j=0; j<vec.size(); ++j) {
+            knights[vec[j].first].y = vec[j].second.first;
+            knights[vec[j].first].x = vec[j].second.second;
+        }
         damage(idx);
     }
 }
