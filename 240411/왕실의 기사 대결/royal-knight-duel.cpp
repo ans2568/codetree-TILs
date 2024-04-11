@@ -22,7 +22,7 @@ bool result;
 void input();
 
 bool move(int idx, int direction, vector<pair<int, pair<int, int>>>& vec) {
-    // cout << idx << "번째 기사 이동 시작" << endl;
+    cout << idx << "번째 기사 이동 시작" << endl;
     int y = knights[idx].y;
     int x = knights[idx].x;
     int w = knights[idx].w;
@@ -39,6 +39,7 @@ bool move(int idx, int direction, vector<pair<int, pair<int, int>>>& vec) {
             }
             for (int i=1; i<=N; ++i) {
                 if (i == idx) continue;
+                if (killed[i]) continue;
                 // 이미 존재하는 기사 있다면
                 if ((r >= knights[i].y && r <= (knights[i].y + knights[i].h - 1)) && 
                     (c >= knights[i].x && c <= (knights[i].x + knights[i].w - 1))) {
@@ -54,7 +55,6 @@ bool move(int idx, int direction, vector<pair<int, pair<int, int>>>& vec) {
         }
     }
     vec.push_back(make_pair(idx, make_pair(ny, nx)));
-    // cout << idx << "번째 기사 좌표 변환" << endl;
     // knights[idx].y = ny;
     // knights[idx].x = nx;
     return true;
@@ -71,11 +71,12 @@ void damage(int idx) {
                 if (killed[i]) continue;
                 if (game[y][x] == 1) {
                     knights[i].k -= 1;
-                    knights[i].damaged += 1;
                     if (knights[i].k <= 0) {
                         killed[i] = true;
                         continue;
-                    } 
+                    }
+                    knights[i].damaged += 1;
+                    // cout << i << "번째 기사 받은 데미지 + 1 = " << knights[i].damaged << endl;
                 }
             }
         }
@@ -132,6 +133,7 @@ void input() {
             continue;
         }
         for (int j=0; j<vec.size(); ++j) {
+            // cout << vec[j].first << "번째 기사 좌표 변환" << endl;
             knights[vec[j].first].y = vec[j].second.first;
             knights[vec[j].first].x = vec[j].second.second;
         }
