@@ -23,7 +23,7 @@ int dist(int sy, int sx, int ey, int ex) {
 
 // 루돌프 움직이기
 void dolph_move() {
-    int min = 52;
+    int min = 987654321;
     int santa_num; // 가장 가까운 산타 번호
     int x, y; // 가장 가까운 산타 좌표
 
@@ -57,7 +57,7 @@ void dolph_move() {
         }
     }
 
-    int min_dist = 52;
+    int min_dist = 987654321;
     int direction = -1;
     // 루돌프가 산타 방향으로 움직이기 8방향 중 최 우선 방향
     for (int i=0; i<8; ++i) {
@@ -71,7 +71,7 @@ void dolph_move() {
             direction = i;
         }
     }
-    if (direction == -1) cout << direction;
+    // if (direction == -1) cout << direction;
     // 루돌프 위치 업데이트
     ry += dolph_dy[direction];
     rx += dolph_dx[direction];
